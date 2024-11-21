@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>Video Voicer</title>
+        <style>
+            video {
+                width: 400px;
+                height: auto;
+            }
+
+            #uploader {
+                width: 960px;
+                margin: 0 auto;
+                font-size: 24px;
+
+                input {
+                    font-size: 20px;
+                    &::file-selector-button {
+                        color: dodgerblue;
+                        padding: 0.25lh;
+                        border: none;
+                        border-radius: 5px;
+                        background: #000;
+                        color: #fff;
+                        margin-right: 10px;
+                    }
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <section id="uploader">
+            <input type="file" accept="video/*" id="input-tag" />
+            <hr />
+            <video controls id="video-tag">
+                <source id="video-source" src="splashVideo" />
+                Your browser does not support the video tag.
+            </video>
+            <p id="videoDuration"></p>
+        </section>
+
+        <script>
+            const videoSrc = document.querySelector("#video-source");
+            const videoTag = document.querySelector("#video-tag");
+            const inputTag = document.querySelector("#input-tag");
+
+            let duration;
+
+            inputTag.addEventListener("change", readVideo);
+
+            videoTag.addEventListener(
+                "loadeddata",
+                function () {
+                    duration = videoTag.duration;
+                    videoDuration.innerText = duration + "s";
+                },
+                false,
+            );
+
+            function readVideo(event) {
+                console.log(event.target.files);
+                if (event.target.files && event.target.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        videoSrc.src = e.target.result;
+                        videoTag.load();
+                    }.bind(this);
+
+                    reader.readAsDataURL(event.target.files[0]);
+                }
+            }
+        </script>
+    </body>
+</html>
